@@ -1,0 +1,70 @@
+static ArrayList<String> logfile = new ArrayList<String>();
+	void loglist() throws IOException {
+		FileWriter writehandle = new FileWriter("H:\\.txt");
+		BufferedWriter bw = new BufferedWriter(writehandle);
+		
+		
+		String ShapeOrder = "";
+		if(Draw.Identification == 1) {
+			ShapeOrder = Draw.TriangleList;
+		}
+		else if(Draw.Identification == 2) {
+			ShapeOrder = Draw.SquareList;
+		}
+		else if(Draw.Identification == 3) {
+			ShapeOrder = Draw.RectangleList;
+		}
+//		logfile.add(ShapeOrder);
+
+		String largestShape = "";
+		if(Draw.largestSquare > Draw.largestTriangle && Draw.largestSquare > Draw.largestRectangle ){
+			largestShape = "Square " +  Draw.largestSquare;
+		}
+		else if(Draw.largestTriangle >Draw.largestSquare && Draw.largestTriangle >  Draw.largestRectangle ) {
+			largestShape = "Rectangle " +  Draw.largestRectangle;
+		}
+		else if(Draw.largestRectangle > Draw.largestSquare && Draw.largestRectangle > Draw.largestTriangle) {
+			largestShape = "Triangle " + Draw.largestRectangle;
+		}
+//		logfile.add(largestShape);
+
+		String mostCommon = "";
+		if(Main.SqrCount > Main.TriCount  && Main.SqrCount > Main.RectCount){
+			mostCommon =  " Square with " + Main.SqrCount + " Drawn"; 
+			}else if(Main.TriCount > Main.SqrCount && Main.TriCount>Main.RectCount ){
+			mostCommon = "Traingle with " + Main.TriCount + " Drawn";
+		}else if(Main.RectCount > Main.SqrCount && Main.RectCount>Main.TriCount ){
+			mostCommon = "Rectangle with " + Main.RectCount + " Drawn";
+		}
+		else {
+			mostCommon = "No Shapes Drawn";
+		}
+//		logfile.add(mostCommon);
+		String file = ShapeOrder + System.lineSeparator() + largestShape + System.lineSeparator() + mostCommon;
+		String line = null;
+		   while((line = bw.readLine()) != null)
+		   {
+		      System.out.println(file);
+		   }
+		   bw.close();
+		   writehandle.close();
+		
+//		logfile.add(file);
+//		for(String str : logfile)
+//		{
+//			bw.write(str);
+//		}
+//		bw.close();
+//		writehandle.close();
+		
+//		String file = ShapeOrder + System.lineSeparator() + largestShape + System.lineSeparator() + mostCommon;
+//		String filelog = logfile.toString();
+//		bw.write("heloo fucker");
+//		bw.write(file);
+////		System.out.println(filelog);
+//		bw.close();
+//		writehandle.close();
+	}
+
+
+}
