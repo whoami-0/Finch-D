@@ -1,0 +1,144 @@
+import java.util.ArrayList;
+import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
+import java.util.Timer;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import edu.cmu.ri.createlab.terk.robot.finch.Finch;
+public class Draw {
+	
+	public String NameofShape;
+	public int[] ShapeSides,ShapeAngles;
+	public static int Identification;
+
+	static String RectangleList = "";//creating both array lists for rectangle and triangle
+	static String SquareList = "";
+	static String TriangleList = "";
+	DecimalFormat  df = new DecimalFormat("#.00");
+
+
+	static int largestTriangle = 0;//setting largest triangle and rectangle areas to 0
+	static int largestRectangle = 0;
+	static int largestSquare = 0;
+	//	int SideA,SideB,SideC;
+	//	double AngleA,AngleB, AngleC;
+
+	public Draw(int SideA, int SideB, int SideC, double angleA, double angleB, double angleC) {
+		DecimalFormat  df = new DecimalFormat("#.00");
+		this.Identification = 1;
+		this.ShapeSides = new int[3];
+		this.ShapeSides[0] = SideA;
+		this.ShapeSides[1] = SideB;
+		this.ShapeSides[2] = SideC;
+
+		this.ShapeAngles = new int[3];
+		this.ShapeAngles[0] =  (int) angleA;
+		this.ShapeAngles[1] = (int) angleB;
+		this.ShapeAngles[2] = (int) angleC;
+
+		drawShape();
+		//			double TriArea = 0.5*SideA*SideB*Math.sin(angleC);
+		//			if(TriArea>largestTriangle) {
+		//				largestTriangle = (int) TriArea;
+		//			}
+		df.format(angleA); df.format(angleB); df.format(angleC);
+		String TriangleList = (Integer.toString(SideA) + " " + Integer.toString(SideB) + " " + Integer.toString(SideC) + " " + Integer.toString((int)(angleA)) + " " + Integer.toString((int) angleB) + " " + Integer.toString((int) angleC));
+		TxtFile.logfile.add(TriangleList);
+	}
+
+
+
+
+
+	//			df.format(angleA);  df.format(angleB); df.format(angleC);
+
+	public Draw(int x) {
+
+		this.Identification = 2;
+		this.NameofShape = "Square";
+		this.ShapeSides = new int[4];
+
+		for(int i=0;i<4;++i) {
+			this.ShapeSides[i] = x;	
+		}
+
+		this.ShapeAngles = new int [4];
+		for(int i=0;i<4;++i) {
+			this.ShapeAngles[i] =  90;
+		}
+
+		double SqrArea = Math.pow(x, 2);
+		if(SqrArea>largestSquare) {
+			largestSquare = (int) SqrArea;
+		}
+		drawShape();
+		String SquareList = "Square " + Integer.toString(x);
+		TxtFile.logfile.add(SquareList);
+	}
+
+	public Draw(int length, int width) {
+		this.Identification = 3;
+		this.ShapeSides = new int[4];
+		this.ShapeSides[0] = length;
+		this.ShapeSides[1] = width;
+		this.ShapeSides[2] = length;
+		this.ShapeSides[3] = width;
+
+		this.ShapeAngles = new int [4];
+		for(int i=0;i<4;++i) {
+			this.ShapeAngles[0] =  90;
+		}
+		int RectArea = length*width;
+		if(RectArea>largestRectangle) {
+			largestRectangle = RectArea;
+		}
+
+		drawShape();
+		String RectangleList = "Rectangle " + Integer.toString(length) + " " + Integer.toString(width); 
+		TxtFile.logfile.add(RectangleList);
+	}
+
+	void drawShape() {
+		System.out.println("Beginning drawing...");
+		Timer timer = new Timer();
+		MoveFinchForward(ShapeSides[0]);	
+		RotateMyFinch(ShapeAngles[0]);	
+		MoveFinchForward(ShapeSides[1]);	
+		RotateMyFinch(ShapeAngles[1]); 
+		MoveFinchForward(ShapeSides[2]);	
+		RotateMyFinch(ShapeAngles[2]); 
+		if(this.Identification == 2 || this.Identification == 3) {
+			MoveFinchForward(ShapeSides[3]);
+			RotateMyFinch(ShapeAngles[3]);
+			
+		}		
+		System.out.println("Drawing completed");
+		Main.DrawFinch.buzz(1200, 1000);
+	}
+
+
+
+	void MoveFinchForward(int length) {
+
+		int TimeConversion = (int) Math.round(length*83); //length to time conversion
+
+		Main.DrawFinch.setWheelVelocities(100,100,TimeConversion); //both wheels 
+
+		Main.DrawFinch.sleep(500); //short wait before doing next action
+	}
+
+	void RotateMyFinch(int angle) {
+
+		final String deg = "\u00b0";
+		System.out.println("rotate " + angle + deg);
+		int ex_angle = 180 - angle;
+		double TimeConversion = (int) (ex_angle*14.3333333); //angle to time conversion
+
+		Main.DrawFinch.setWheelVelocities(100,0,(int)TimeConversion); //left wheel only.
+
+		Main.DrawFinch.sleep(500);
+
+	}
+}
